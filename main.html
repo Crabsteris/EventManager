@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Planner</title>
+  <style>
+    
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #c7bbbb; 
+    }
+
+    h1, h2 {
+      margin-bottom: 10px;
+      color: #000;
+    }
+
+    h2 {
+      text-decoration: underline;
+    }
+
+    form {
+      margin-bottom: 20px;
+      max-width: 400px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 800px; 
+      margin: 0 auto; 
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f9f9f9; 
+    }
+
+    li button {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('event-form');
+  var eventList = document.getElementById('event-list');
+  var completedEventList = document.getElementById('completed-event-list');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    createEvent();
+  });
+
+  function createEvent() {
+    var title = document.getElementById('event-title').value;
+    var date = document.getElementById('event-date').value;
+    var time = document.getElementById('event-time').value;
+    var location = document.getElementById('event-location').value;
+    var description = document.getElementById('event-description').value;
+
+    var eventItem = document.createElement('li');
+    eventItem.innerHTML = `
+      <h3>${title}</h3>
+      <p>Date: ${date}</p>
+      <p>Time: ${time}</p>
+      <p>Location: ${location}</p>
+      <p>Description: ${description}</p>
+      <button class="edit-button">Edit</button>
+      <button class="delete-button">Delete</button>
+      <button class="complete-button">Complete</button>
+    `;
+
+    eventList.appendChild(eventItem);
+    form.reset();
+
+    
+    var editButton = eventItem.querySelector('.edit-button');
+    var deleteButton = eventItem.querySelector('.delete-button');
+    var completeButton = eventItem.querySelector('.complete-button');
+
+    editButton.addEventListener('click', function() {
+      editEvent(eventItem);
+    });
+
+    deleteButton.addEventListener('click', function() {
+      eventItem.remove();
+    });
+
+    completeButton.addEventListener('click', function() {
+      completeEvent(eventItem);
+    });
+  }
+
+  function editEvent(eventItem) {
+    var title = eventItem.querySelector('h3');
+    var date = eventItem.querySelector('p:nth-child(2)');
+    var time = eventItem.querySelector('p:nth-child(3)');
+    var location = eventItem.querySelector('p:nth-child(4)');
+    var description = eventItem.querySelector('p:nth-child(5)');
+
+    var newTitle = prompt('Enter a new title:', title.textContent);
+    if (newTitle) {
+      title.textContent = newTitle;
+    }
+
+    var newDate = prompt('Enter a new date:', date.textContent.substr(6));
+    if (newDate) {
+      date.textContent = 'Date: ' + newDate;
+    }
+
+    var newTime = prompt('Enter a new time:', time.textContent.substr(6));
+    if (newTime) {
+      time.textContent = 'Time: ' + newTime;
+    }
+
+    var newLocation = prompt('Enter a new location:', location.textContent.substr(10));
+    if (newLocation) {
+      location.textContent = 'Location: ' + newLocation;
+    }
+
+    var newDescription = prompt('Enter a new description:', description.textContent.substr(13));
+    if (newDescription) {
+      description.textContent = 'Description: ' + newDescription;
+    }
+  }
+
+  function completeEvent(eventItem) {
+    eventItem.querySelector('.edit-button').remove(); // Remove the edit button from the event item
+    eventItem.querySelector('.complete-button').remove(); // Remove the complete button from the event item
+    completedEventList.appendChild(eventItem);
+  }
+});
+  </script>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Event Planner</h1>
+    
+    
+    <h2>Create Event</h2>
+    <form id="event-form">
+      <label for="event-title">Title:</label>
+      <input type="text" id="event-title" name="event-title" required>
+      
+      <label for="event-date">Date:</label>
+      <input type="date" id="event-date" name="event-date" required>
+      
+      <label for="event-time">Time:</label>
+      <input type="time" id="event-time" name="event-time" required>
+      
+      <label for="event-location">Location:</label>
+      <input type="text" id="event-location" name="event-location" required>
+      
+      <label for="event-description">Description:</label>
+      <textarea id="event-description" name="event-description" required></textarea>
+      
+      <input type="submit" value="Create Event">
+    </form>
+ 
+    <h2>My Events</h2>
+    <ul id="event-list"></ul>
+    
+    <h2>Complete events</h2>
+    <ul id="completed-event-list"></ul>
+  </div>
+</body>
+</html>
